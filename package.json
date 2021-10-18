@@ -1,0 +1,36 @@
+{
+  "name": "water_my_plants_07_back_end",
+  "version": "1.0.0",
+  "description": "back end api for water my plants project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ft-watermyplants-7/back-end.git"
+  },
+  "author": "techwulf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ft-watermyplants-7/back-end/issues"
+  },
+  "homepage": "https://github.com/ft-watermyplants-7/back-end#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.95.11"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
+    "eslint": "^8.0.1",
+    "jest": "^27.3.0",
+    "nodemon": "^2.0.13",
+    "supertest": "^6.1.6"
+  }
+}
