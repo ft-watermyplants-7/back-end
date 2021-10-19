@@ -28,6 +28,10 @@ module.exports = {
     }
   },
   production: {
-    // figure out what to put here
+    ...sharedConfig,
+    connection: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnathorized: false }
+    }
   }
 }
