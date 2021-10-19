@@ -20,5 +20,22 @@ afterAll(async () => {
   await db.destroy();
 });
 
-describe('[POST] /api/register', () => {
+describe('[POST] /api/auth/register', () => {
+  const newUser = {username: 'gimli', password: 'andMyAxe'}
+  let res;
+  beforeEach(async () => {
+    res = await request(server).post('/api/auth/register')
+      .send(newUser);
+  });
+  it('adds new user into the database', async () => {
+    const users = await db('users');
+    expect(users).toHaveLength(2);
+  });
+  it('responds with proper error when fields missing', async () => {
+    const res = await request(server).post('api/auth/register')
+      .send({junk: 'junk'});
+    expect(res.body).toMatchObject({
+      message: 'username and password are required'
+    });
+  });
 });

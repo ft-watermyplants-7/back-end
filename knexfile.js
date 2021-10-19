@@ -24,7 +24,7 @@ module.exports = {
       host: '127.0.0.1',
       port: 5432,
       user: 'antireaper',
-      database: 'waterMyPlants07'
+      database: 'waterMyPlants07testing'
     }
   },
   production: {
