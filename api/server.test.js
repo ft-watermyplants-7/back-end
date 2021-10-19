@@ -2,6 +2,7 @@ const request = require('supertest');
 
 const server = require('./server');
 const db = require('../data/dbConfig');
+let token;
 
 it('sanity control', () => {
   expect(true).toBe(true);
@@ -59,5 +60,19 @@ describe('[POST] /api/auth/register', () => {
     expect(res.body).toMatchObject({
       message: 'invalid entries'
     });
+  });
+});
+
+describe('POST /api/auth/login', () => {
+  let res;
+  const user = {username: 'testUser', password: 'andMyAxe'};
+  beforeEach(async () => {
+    res = await request(server).post('/api/auth/login')
+      .send(user);
+  });
+  it('can successfuly log in user', async () => {
+    expect(res.body.message).toBe('welcome, testUser!');
+    if(res.body.token) {token = res.body.token}
+    expect(res.body.token).toBeTruthy();
   });
 });
