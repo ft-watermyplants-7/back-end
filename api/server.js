@@ -19,9 +19,9 @@ server.use((err, req, res, next) => { // eslint-disable-line
     });
   } else {
     res.status(500).json({
-      // message: 'something went wrong'
-      message: err.message,
-      stack: err.stack
+      message: 'something went wrong'
+      // message: err.message,
+      // stack: err.stack
     });
   }
 });

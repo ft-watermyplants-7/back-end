@@ -32,10 +32,32 @@ describe('[POST] /api/auth/register', () => {
     expect(users).toHaveLength(2);
   });
   it('responds with proper error when fields missing', async () => {
-    const res = await request(server).post('api/auth/register')
+    const res = await request(server).post('/api/auth/register')
       .send({junk: 'junk'});
     expect(res.body).toMatchObject({
       message: 'username and password are required'
+    });
+  });
+  it('responds with proper error if username taken', async () => {
+    res = await request(server).post('/api/auth/register')
+      .send({username: 'testUser', password: 'password'});
+    expect(res.body).toMatchObject({
+      message: 'username is taken'
+    });
+  });
+  it('payload entries are properly trimmed and verified', async () => {
+    res = await request(server).post('/api/auth/register')
+      .send({username: '  frodo ', password: 'nooooooooo'});
+    expect(res.body.username).toBe('frodo');
+    res = await request(server).post('/api/auth/register')
+      .send({username: 'sam', password: 'boilem'});
+    expect(res.body).toMatchObject({
+      message: 'password length too short'
+    });
+    res = await request(server).post('/api/auth/register')
+      .send({username: 'Gandalf the White', password: 'Fly you fools'});
+    expect(res.body).toMatchObject({
+      message: 'invalid entries'
     });
   });
 });
