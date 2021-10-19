@@ -4,7 +4,9 @@
   "description": "back end api for water my plants project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "test": "cross-env NODE_ENV=testing jest --watchAll --verbose --runInBand"
   },
   "repository": {
     "type": "git",
