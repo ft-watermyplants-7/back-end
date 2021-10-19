@@ -12,6 +12,10 @@ server.use(cors());
 
 server.use('/api/auth', authRouter);
 
+server.get('/', (req, res) => {
+  res.send('api running');
+});
+
 server.use((err, req, res, next) => { // eslint-disable-line
   if (err.status) {
     res.status(err.status).json({
