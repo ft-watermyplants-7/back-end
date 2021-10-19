@@ -2,7 +2,9 @@ const request = require('supertest');
 
 const server = require('./server');
 const db = require('../data/dbConfig');
-let token;
+const buildToken = require('../api/auth/token-builder');
+
+const token = buildToken({username: 'testUser', userId: 1});
 
 it('sanity control', () => {
   expect(true).toBe(true);
@@ -72,7 +74,18 @@ describe('POST /api/auth/login', () => {
   });
   it('can successfuly log in user', async () => {
     expect(res.body.message).toBe('welcome, testUser!');
-    if(res.body.token) {token = res.body.token}
     expect(res.body.token).toBeTruthy();
+  });
+  it('sends proper error message on invalid credentials', async () => {
+    res = await request(server).post('/api/auth/login')
+      .send({username: 'testUser', password: 'youShallNotPass'});
+    expect(res.body).toMatchObject({
+      message: 'invalid credentials'
+    });
+    res = await request(server).post('/api/auth/login')
+      .send({username: 'Gandalf', password: 'youShallNotPass'});
+    expect(res.body).toMatchObject({
+      message: 'invalid credentials'
+    });
   });
 });
