@@ -4,7 +4,7 @@ const server = require('./server');
 const db = require('../data/dbConfig');
 const buildToken = require('../api/auth/token-builder');
 
-const token = buildToken({username: 'testUser', userId: 1});
+const token = buildToken({username: 'testUser', user_id: 1});
 
 it('sanity control', () => {
   expect(true).toBe(true);
@@ -86,6 +86,39 @@ describe('POST /api/auth/login', () => {
       .send({username: 'Gandalf', password: 'youShallNotPass'});
     expect(res.body).toMatchObject({
       message: 'invalid credentials'
+    });
+  });
+});
+
+describe('PUT /api/auth/', () => {
+  let res;
+  beforeEach(async () => {
+    password = await db('users').where('user_id', 1).first().then(user => {
+      return user.password;
+    });
+    res = await request(server).put('/api/auth/')
+      .send({username: 'newUser', password: 'moreSecure'})
+      .set({authorization: token});
+  });
+  it('successfuly updates user data', async () => {
+    const newUser = await db('users').where('user_id', 1).first(); 
+    expect(res.body).toMatchObject({message: 'working'});
+    expect(newUser.username).toBe('newUser');
+    expect(password).not.toBe(newUser.password);
+  });
+  it('fails when token is not provided', async () => {
+    res = await request(server).put('/api/auth/')
+      .send({username: 'sneaky', password: 'theyWillNeverKnow'})
+    expect(res.body).toMatchObject({
+      message: 'token required'
+    });
+  });
+  it('fails when invalid token is provided', async () => {
+    res = await request(server).put('/api/auth/')
+      .send({username: 'sneaky', password: 'theyWillNeverKnow'})
+      .set({authorization: 'totallyAValidTokenJFSOFISJDLFKSJDFKOKEFJSLD'})
+    expect(res.body).toMatchObject({
+      message: 'token invalid'
     });
   });
 });

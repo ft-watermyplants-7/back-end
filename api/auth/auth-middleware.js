@@ -1,4 +1,7 @@
 const db = require('../../data/dbConfig');
+const jwt = require('jsonwebtoken');
+
+const {JWT_SECRET} = require('../secrets');
 
 const userSchema = require('./userSchema');
 
@@ -46,9 +49,25 @@ const checkUser = async (req, res, next) => {
   }
 }
 
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    next({status: 401, message: 'token required'})
+  }
+  jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+    if (err) {
+      next({status: 401, message: 'token invalid'});
+    } else {
+      req.token = decodedToken;
+      next();
+    };
+  });
+}
+
 module.exports = {
   checkCredentials,
   checkUsername,
   checkPayload,
-  checkUser
+  checkUser,
+  verifyToken
 }
