@@ -51,6 +51,9 @@ router.post(
 
 router.put(
   '/',
+  checkCredentials, 
+  checkUsername,
+  checkPayload,
   verifyToken,
   (req, res, next) => {
     const user = req.body;

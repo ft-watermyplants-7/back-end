@@ -98,12 +98,27 @@ describe('PUT /api/auth/', () => {
     });
     res = await request(server).put('/api/auth/')
       .send({username: 'newUser', password: 'moreSecure'})
-      .set({Authorization: token});
+      .set({authorization: token});
   });
   it('successfuly updates user data', async () => {
     const newUser = await db('users').where('user_id', 1).first(); 
     expect(res.body).toMatchObject({message: 'working'});
-    // expect(newUser.username).toBe('newUser');
+    expect(newUser.username).toBe('newUser');
     expect(password).not.toBe(newUser.password);
+  });
+  it('fails when token is not provided', async () => {
+    res = await request(server).put('/api/auth/')
+      .send({username: 'sneaky', password: 'theyWillNeverKnow'})
+    expect(res.body).toMatchObject({
+      message: 'token required'
+    });
+  });
+  it('fails when invalid token is provided', async () => {
+    res = await request(server).put('/api/auth/')
+      .send({username: 'sneaky', password: 'theyWillNeverKnow'})
+      .set({authorization: 'totallyAValidTokenJFSOFISJDLFKSJDFKOKEFJSLD'})
+    expect(res.body).toMatchObject({
+      message: 'token invalid'
+    });
   });
 });
