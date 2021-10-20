@@ -4,7 +4,7 @@ const {JWT_SECRET} = require('../secrets');
 
 module.exports = function(user) {
   const payload = {
-    userId: user.user_id,
+    user_id: user.user_id,
     username: user.username
   };
   const options = {

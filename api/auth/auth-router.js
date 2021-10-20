@@ -8,6 +8,7 @@ const {
   checkUsername,
   checkPayload,
   checkUser,
+  verifyToken
 } = require('./auth-middleware');
 const buildToken = require('./token-builder');
 // middleware ./auth-middleware
@@ -46,7 +47,18 @@ router.post(
     } else {
       next({status: 401, message: 'invalid credentials'});
     }
-  }
-)
+});
+
+router.put(
+  '/',
+  verifyToken,
+  (req, res, next) => {
+    const user = req.body;
+    const hash = bcrypt.hashSync(user.password, ROUNDS);
+    const id = req.token.user_id;
+    user.password = hash;
+    const update = Users.update(user, id);
+    res.status(200).json({message: 'working'});
+});
 
 module.exports = router;

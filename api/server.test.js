@@ -4,7 +4,7 @@ const server = require('./server');
 const db = require('../data/dbConfig');
 const buildToken = require('../api/auth/token-builder');
 
-const token = buildToken({username: 'testUser', userId: 1});
+const token = buildToken({username: 'testUser', user_id: 1});
 
 it('sanity control', () => {
   expect(true).toBe(true);
@@ -87,5 +87,23 @@ describe('POST /api/auth/login', () => {
     expect(res.body).toMatchObject({
       message: 'invalid credentials'
     });
+  });
+});
+
+describe('PUT /api/auth/', () => {
+  let res;
+  beforeEach(async () => {
+    password = await db('users').where('user_id', 1).first().then(user => {
+      return user.password;
+    });
+    res = await request(server).put('/api/auth/')
+      .send({username: 'newUser', password: 'moreSecure'})
+      .set({Authorization: token});
+  });
+  it('successfuly updates user data', async () => {
+    const newUser = await db('users').where('user_id', 1).first(); 
+    expect(res.body).toMatchObject({message: 'working'});
+    // expect(newUser.username).toBe('newUser');
+    expect(password).not.toBe(newUser.password);
   });
 });
