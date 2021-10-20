@@ -31,7 +31,7 @@ module.exports = {
     ...sharedConfig,
     connection: {
       connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnathorized: false }
+      ssl: { rejectUnauthorized: false}
     }
   }
 }
