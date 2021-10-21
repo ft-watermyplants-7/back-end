@@ -122,3 +122,15 @@ describe('PUT /api/auth/', () => {
     });
   });
 });
+
+describe('POST /api/plants', () => {
+  it('successfully adds an new plant to database', async () => {
+    const res = await request(server).post('/api/plants')
+      .send({
+        user_id: 1, nickname: 'planty', species: 'plant', h20Frequency: 48
+      })
+      .set({authorization: token})
+    const plants = await db('plants').where('user_id', 1);
+    expect(plants).toHaveLength(1);
+  });
+});
