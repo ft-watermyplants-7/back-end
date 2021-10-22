@@ -127,10 +127,23 @@ describe('POST /api/plants', () => {
   it('successfully adds an new plant to database', async () => {
     const res = await request(server).post('/api/plants')
       .send({
-        user_id: 1, nickname: 'planty', species: 'plant', h20Frequency: 48
+        nickname: 'planty', 
+        species: 'plant', 
+        h2oFrequency: 48
       })
       .set({authorization: token})
     const plants = await db('plants').where('user_id', 1);
-    expect(plants).toHaveLength(1);
+    expect(plants).toHaveLength(3);
+  });
+  it('proper error on a lacking payload', async () => {
+    const res = await request(server).post('/api/plants')
+      .send({
+        nickname: 'planty', 
+        h2oFrequency: 48
+      })
+      .set({authorization: token});
+    expect(res.body).toMatchObject({
+      message: 'request does not meet requirements'
+    });
   });
 });

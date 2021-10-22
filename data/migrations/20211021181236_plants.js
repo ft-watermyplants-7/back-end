@@ -10,6 +10,13 @@ exports.up = function(knex) {
       p.string('species', 128).notNullable();
       p.float('h2oFrequency', 8).notNullable();
       p.binary('image');
+      p.integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('user_id')
+        .inTable('users')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE');
     });
 };
 
