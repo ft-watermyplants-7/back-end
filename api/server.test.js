@@ -147,3 +147,36 @@ describe('POST /api/plants', () => {
     });
   });
 });
+
+describe('GET /api/plants', () => {
+  it('can successfully fetch plants for user', async () => {
+    const res = await request(server).get('/api/plants')
+      .set({authorization: token});
+    expect(res.body).toHaveLength(2);
+  });
+});
+
+describe('PUT /api/plants/:id', () => {
+  it('can successfully update a plants info', async () => {
+    const plant = await db('plants').where('plant_id', 1);
+    const res = await request(server).put('/api/plants/1')
+      .send({
+        nickname: 'plantipus', 
+        species: 'plant', 
+        h2oFrequency: 12 
+      })
+      .set({authorization: token});
+    const changedPlant = await db('plants').where('plant_id', 1);
+    expect(changedPlant).not.toMatchObject(plant);
+  });
+});
+
+describe('DELETE /api/plants/:id', () => {
+  it('can successfully delete a plant', async () => {
+    const res = await request(server).delete('/api/plants/1')
+      .set({authorization: token});
+    const deletedPlant = await db('plants').where('plant_id', 1).first();
+    expect(res.body).toMatchObject({message: 'plant was successfully deleted'});
+    expect(deletedPlant).not.toBeTruthy();
+  });
+});
